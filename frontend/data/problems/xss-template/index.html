@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>Welcome to Your Profile</h1>
+    
+    <!-- VULNERABLE: User input rendered directly without sanitization -->
+    <div class="profile">
+        <h2>User: <span id="username">{{ username }}</span></h2>
+        <p>Bio: <span id="bio">{{ user_bio }}</span></p>
+    </div>
+    
+    <script>
+        // This would be rendered from server-side template
+        // If user_bio contains <script>alert('XSS')</script>, it will execute
+        const username = document.getElementById('username').textContent;
+        const bio = document.getElementById('bio').innerHTML; // innerHTML is vulnerable
+        
+        // VULNERABLE: Using innerHTML instead of textContent
+        document.getElementById('bio').innerHTML = bio;
+    </script>
+</body>
+</html>
+
