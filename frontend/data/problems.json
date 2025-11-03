@@ -1,0 +1,78 @@
+[
+  {
+    "slug": "sqli-login",
+    "title": "SQLi in login handler",
+    "topic": "sqli",
+    "difficulty": 2,
+    "summary": "A login route that concatenates user input directly into SQL queries, making it vulnerable to SQL injection attacks.",
+    "files": [
+      {
+        "path": "app.py",
+        "language": "python",
+        "src": "app.py"
+      }
+    ],
+    "tags": ["CWE-89", "OWASP:A03"]
+  },
+  {
+    "slug": "xss-template",
+    "title": "XSS in template output",
+    "topic": "xss",
+    "difficulty": 1,
+    "summary": "User input is rendered directly in HTML templates without sanitization, allowing cross-site scripting attacks.",
+    "files": [
+      {
+        "path": "index.html",
+        "language": "html",
+        "src": "index.html"
+      }
+    ],
+    "tags": ["CWE-79", "OWASP:A03"]
+  },
+  {
+    "slug": "weak-crypto",
+    "title": "Weak encryption implementation",
+    "topic": "crypto",
+    "difficulty": 3,
+    "summary": "The application uses deprecated cryptographic algorithms and weak key derivation functions.",
+    "files": [
+      {
+        "path": "crypto.js",
+        "language": "javascript",
+        "src": "crypto.js"
+      }
+    ],
+    "tags": ["CWE-327", "OWASP:A02"]
+  },
+  {
+    "slug": "session-fixation",
+    "title": "Session fixation vulnerability",
+    "topic": "auth",
+    "difficulty": 2,
+    "summary": "Session identifiers are not regenerated after authentication, allowing attackers to hijack user sessions.",
+    "files": [
+      {
+        "path": "auth.js",
+        "language": "javascript",
+        "src": "auth.js"
+      }
+    ],
+    "tags": ["CWE-384", "OWASP:A07"]
+  },
+  {
+    "slug": "unsafe-deserialize",
+    "title": "Unsafe deserialization",
+    "topic": "deserialization",
+    "difficulty": 4,
+    "summary": "User-controlled data is deserialized without validation, potentially leading to remote code execution.",
+    "files": [
+      {
+        "path": "serializer.py",
+        "language": "python",
+        "src": "serializer.py"
+      }
+    ],
+    "tags": ["CWE-502", "OWASP:A08"]
+  }
+]
+
