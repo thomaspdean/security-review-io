@@ -94,16 +94,12 @@ export default async function ProblemDetailPage({ params }: ProblemDetailPagePro
 
       <Card>
         <CardHeader>
-          <CardTitle>Code Files</CardTitle>
+          <CardTitle>Code Review</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <ProblemDetailContent problem={problem} />
         </CardContent>
       </Card>
-
-      <div className="flex justify-end">
-        <Button size="lg">Start Review</Button>
-      </div>
     </div>
   );
 }

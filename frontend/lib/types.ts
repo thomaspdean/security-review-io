@@ -19,6 +19,10 @@ export type Problem = {
     src: string;
   }>;
   tags?: string[];
+  solution?: {
+    vulnerableLines: number[];
+    explanation: string;
+  };
 };
 
 export type ProblemWithContent = Problem & {
