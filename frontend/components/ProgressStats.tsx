@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserProgress } from "@/lib/types";
 import { CheckCircle2, Clock, Trophy } from "lucide-react";
@@ -9,6 +10,7 @@ interface ProgressStatsProps {
 }
 
 export function ProgressStats({ progress }: ProgressStatsProps) {
+  const [mounted, setMounted] = useState(false);
   const completed = Object.values(progress.problems).filter((p) => p.completed);
   const completedCount = completed.length;
   const totalProblems = Object.keys(progress.problems).length;
@@ -19,6 +21,11 @@ export function ProgressStats({ progress }: ProgressStatsProps) {
             completed.length
         )
       : 0;
+
+  // Only render time on client to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -66,9 +73,11 @@ export function ProgressStats({ progress }: ProgressStatsProps) {
               : "Never"}
           </div>
           <p className="text-xs text-muted-foreground">
-            {progress.lastUpdated
+            {!progress.lastUpdated
+              ? "start solving problems"
+              : mounted
               ? new Date(progress.lastUpdated).toLocaleTimeString()
-              : "start solving problems"}
+              : "—"}
           </p>
         </CardContent>
       </Card>
