@@ -12,7 +12,11 @@
         "src": "app.py"
       }
     ],
-    "tags": ["CWE-89", "OWASP:A03"]
+    "tags": ["CWE-89", "OWASP:A03"],
+    "solution": {
+      "vulnerableLines": [27],
+      "explanation": "Line 27 constructs a SQL query using f-string formatting, directly concatenating user input (username and password) into the query string. This allows attackers to inject malicious SQL code. For example, entering ' OR '1'='1' -- as the username would bypass authentication. The fix is to use parameterized queries: cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))"
+    }
   },
   {
     "slug": "xss-template",
@@ -27,7 +31,11 @@
         "src": "index.html"
       }
     ],
-    "tags": ["CWE-79", "OWASP:A03"]
+    "tags": ["CWE-79", "OWASP:A03"],
+    "solution": {
+      "vulnerableLines": [21, 24],
+      "explanation": "Lines 21 and 24 use innerHTML to set content, which allows HTML/JavaScript injection. If user_bio contains malicious script tags like <script>alert('XSS')</script>, it will execute in the browser. Additionally, line 13 uses template syntax that may render unsanitized user input. The fix is to use textContent instead of innerHTML for user-controlled data, and ensure server-side template rendering properly escapes HTML entities."
+    }
   },
   {
     "slug": "weak-crypto",
@@ -42,7 +50,11 @@
         "src": "crypto.js"
       }
     ],
-    "tags": ["CWE-327", "OWASP:A02"]
+    "tags": ["CWE-327", "OWASP:A02"],
+    "solution": {
+      "vulnerableLines": [5, 10, 19],
+      "explanation": "Multiple cryptographic vulnerabilities: Line 5 uses MD5, which is cryptographically broken and vulnerable to collision attacks. Line 10 uses the deprecated crypto.createCipher with ECB mode, which is insecure as identical plaintext blocks produce identical ciphertext blocks. Line 19 uses a hardcoded IV (initialization vector), which should be random and unique for each encryption operation. The fix is to use bcrypt/argon2 for password hashing, AES-GCM with random IVs for encryption, and proper key derivation functions like PBKDF2 or scrypt."
+    }
   },
   {
     "slug": "session-fixation",
@@ -57,7 +69,11 @@
         "src": "auth.js"
       }
     ],
-    "tags": ["CWE-384", "OWASP:A07"]
+    "tags": ["CWE-384", "OWASP:A07"],
+    "solution": {
+      "vulnerableLines": [21, 11, 12],
+      "explanation": "Line 21 does not regenerate the session ID after successful authentication, allowing session fixation attacks where an attacker can force a user to use a known session ID. Lines 11-12 have insecure cookie settings: secure: false allows transmission over HTTP (should be true for HTTPS), and httpOnly: false allows JavaScript access to cookies, making them vulnerable to XSS attacks. The fix is to call req.session.regenerate() after authentication, set secure: true in production, and set httpOnly: true to prevent JavaScript access."
+    }
   },
   {
     "slug": "unsafe-deserialize",
@@ -72,7 +88,11 @@
         "src": "serializer.py"
       }
     ],
-    "tags": ["CWE-502", "OWASP:A08"]
+    "tags": ["CWE-502", "OWASP:A08"],
+    "solution": {
+      "vulnerableLines": [13, 21],
+      "explanation": "Lines 13 and 21 perform unsafe deserialization: pickle.loads() on line 13 can execute arbitrary Python code during deserialization, allowing remote code execution. yaml.load() on line 21 without a safe Loader can also execute arbitrary code. An attacker can craft malicious serialized data that executes code when deserialized. The fix is to avoid pickle for untrusted data entirely, use yaml.safe_load() instead of yaml.load(), or use JSON for data serialization which is safer. Always validate and sanitize deserialized data structure."
+    }
   }
 ]
 
