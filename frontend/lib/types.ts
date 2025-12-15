@@ -34,3 +34,18 @@ export type ProblemWithContent = Problem & {
   }>;
 };
 
+export type ProblemProgress = {
+  slug: string;
+  completed: boolean;
+  score?: number;
+  submittedAt?: string;
+  selectedLines?: number[];
+  explanation?: string;
+};
+
+export type UserProgress = {
+  problems: Record<string, ProblemProgress>;
+  lastUpdated: string;
+  version: string;
+};
+

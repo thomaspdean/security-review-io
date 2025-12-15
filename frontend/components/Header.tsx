@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Shield } from "lucide-react";
+import { Shield, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
   return (
@@ -19,6 +20,12 @@ export function Header() {
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               Problems
+            </Link>
+            <Link href="/progress">
+              <Button variant="ghost" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Progress
+              </Button>
             </Link>
           </div>
         </nav>

@@ -23,7 +23,6 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        # VULNERABLE: Direct string concatenation in SQL query
         query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
         
         conn = sqlite3.connect(DATABASE)

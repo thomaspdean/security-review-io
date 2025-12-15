@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileTabs } from "@/components/FileTabs";
 import { InteractiveCodeViewer } from "@/components/InteractiveCodeViewer";
 import { ProblemSubmission } from "@/components/ProblemSubmission";
 import { ProblemFeedback } from "@/components/ProblemFeedback";
 import { ProblemWithContent } from "@/lib/types";
+import { saveProgress, getProblemProgress } from "@/lib/progress-indexeddb";
+import { ProblemProgress } from "@/lib/types";
 
 interface ProblemDetailContentProps {
   problem: ProblemWithContent;
@@ -18,6 +20,21 @@ export function ProblemDetailContent({ problem }: ProblemDetailContentProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const activeFile = problem.files.find((f) => f.path === activePath);
+
+  // Load existing progress on mount
+  useEffect(() => {
+    getProblemProgress(problem.slug).then((progress) => {
+      if (progress?.completed) {
+        setIsSubmitted(true);
+        if (progress.selectedLines) {
+          setSelectedLines(progress.selectedLines);
+        }
+        if (progress.explanation) {
+          setExplanation(progress.explanation);
+        }
+      }
+    });
+  }, [problem.slug]);
 
   const handleLineClick = (line: number) => {
     if (isSubmitted) return; // Don't allow changes after submission
@@ -37,9 +54,51 @@ export function ProblemDetailContent({ problem }: ProblemDetailContentProps) {
     setSelectedLines((prev) => prev.filter((l) => l !== line));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedLines.length === 0 || !explanation.trim()) return;
+    
+    // Calculate score
+    const correctLines = problem.solution?.vulnerableLines || [];
+    const correctSelections = selectedLines.filter((l) =>
+      correctLines.includes(l)
+    );
+    const missedLines = correctLines.filter(
+      (l) => !selectedLines.includes(l)
+    );
+    const falsePositives = selectedLines.filter(
+      (l) => !correctLines.includes(l)
+    );
+
+    const score =
+      correctLines.length > 0
+        ? Math.max(
+            0,
+            Math.min(
+              100,
+              Math.round(
+                (correctSelections.length / correctLines.length) * 100 -
+                  falsePositives.length * 10
+              )
+            )
+          )
+        : 0;
+
     setIsSubmitted(true);
+
+    // Save progress to IndexedDB
+    try {
+      await saveProgress(problem.slug, {
+        slug: problem.slug,
+        completed: true,
+        score,
+        selectedLines,
+        explanation,
+        submittedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Failed to save progress:", error);
+      // Don't block UI if save fails
+    }
   };
 
   const correctLines = problem.solution?.vulnerableLines || [];

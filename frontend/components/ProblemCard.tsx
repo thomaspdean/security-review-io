@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Problem } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ProgressIndicator } from "./ProgressIndicator";
 
 interface ProblemCardProps {
   problem: Problem;
@@ -44,12 +45,15 @@ export function ProblemCard({ problem }: ProblemCardProps) {
   return (
     <Link href={`/problems/${problem.slug}`} className="block h-full">
       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-xl">{problem.title}</CardTitle>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="text-xl">{problem.title}</CardTitle>
+          <div className="flex items-center gap-2">
+            <ProgressIndicator slug={problem.slug} />
             <TopicBadge topic={problem.topic} />
           </div>
-        </CardHeader>
+        </div>
+      </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Difficulty</span>
