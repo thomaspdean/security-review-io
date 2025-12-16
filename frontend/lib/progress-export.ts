@@ -11,7 +11,7 @@ export async function exportProgressToFile(): Promise<void> {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `security-review-progress-${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `security-review-io-progress-${new Date().toISOString().split("T")[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
